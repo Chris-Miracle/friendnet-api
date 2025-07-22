@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+torch
+torchvision
+Pillow
+numpy<2.0
+open-clip-torch

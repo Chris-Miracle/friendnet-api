@@ -3,13 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.core.model_loader import load_models
 from app.routes import predict, misc
-from app.config import DEVICE
+from app.config import DEVICE, models_dict
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-models_dict = {}
+# models_dict = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

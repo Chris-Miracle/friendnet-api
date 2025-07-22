@@ -1,7 +1,9 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from PIL import Image, ImageEnhance
-import io, time, numpy as np
+import io
+import time
+import numpy as np
 from app.core.transforms import get_advanced_transforms, get_clip_transforms
 from app.core.predictor import get_model_prediction
 from app.config import DEVICE, FRIENDS, models_dict
@@ -18,6 +20,7 @@ async def predict_image(file: UploadFile = File(...), models: str = "all", enhan
 
     image_data = await file.read()
     image = Image.open(io.BytesIO(image_data)).convert("RGB")
+    enhance_image = False
 
     if enhance_image:
         enhancer = ImageEnhance.Sharpness(image)
@@ -38,7 +41,17 @@ async def predict_image(file: UploadFile = File(...), models: str = "all", enhan
 
             image_tensor = transform(image).unsqueeze(0).to(DEVICE)
             pred = await get_model_prediction(models_dict[model_name], image_tensor)
-            predictions[model_name] = pred
+
+            # Convert all numpy or tensor floats to native python floats
+            cleaned_pred = {
+                "predicted_class": pred["predicted_class"],
+                "confidence": float(pred["confidence"]),
+                "max_probability": float(pred.get("max_probability", 0.0)),
+                "entropy": float(pred.get("entropy", 0.0)),
+                "probabilities": {k: float(v) for k, v in pred["probabilities"].items()}
+            }
+
+            predictions[model_name] = cleaned_pred
 
     if len(predictions) > 1:
         ensemble_probs = np.mean(

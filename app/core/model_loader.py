@@ -14,7 +14,7 @@ async def load_models(models_dict: dict):
         model = FriendNet().to(DEVICE)
         model.load_state_dict(torch.load("friendnet.pth", map_location=DEVICE))
         model.eval()
-        models_dict["custom"] = model
+        models_dict["friendnet"] = model
         logger.info("Friendnet loaded")
 
         logger.info("Loading ResNet model...")
@@ -24,7 +24,7 @@ async def load_models(models_dict: dict):
         models_dict["resnet"] = resnet
         logger.info("ResNet loaded")
 
-        logger.info("Loading EfficientNet model...")
+        logger.info("Loading Clip model...")
         clip = Get_clip().to(DEVICE)
         clip.load_state_dict(torch.load("clip.pth", map_location=DEVICE))
         clip.eval()

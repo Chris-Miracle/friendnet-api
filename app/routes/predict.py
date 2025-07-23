@@ -24,6 +24,7 @@ async def predict_image(file: UploadFile = File(...), models: str = Form(None), 
     # DEBUG: Check image properties
     print(f"DEBUG - Original image size: {image.size}")
     print(f"DEBUG - Image mode: {image.mode}")
+    enhance_image = False
 
     if enhance_image:
         enhancer = ImageEnhance.Sharpness(image)

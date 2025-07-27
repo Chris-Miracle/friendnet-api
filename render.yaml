@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: friendnet-api
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "./start.sh"
+    branch: main
+    autoDeploy: true
